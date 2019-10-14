@@ -1,4 +1,4 @@
-function [root,it,success]=newton_exact(f,fprime,x0,maxit,tol,verbose)
+function [root,it,success]=newton_approx(f,x0,eta,maxit,tol,verbose)
 
 % root=newton_exact(f,fprime)
 %
@@ -6,7 +6,10 @@ function [root,it,success]=newton_exact(f,fprime,x0,maxit,tol,verbose)
 % given a function which computes the derivative
 
 %% Error checking of input
-narginchk(3,6);   %check for correct number of inputs to function
+narginchk(2,6);   %check for correct number of inputs to function
+if (nargin<3)
+    eta = .01;
+end
 if (nargin<4)
     maxit=100;       %maximum number of iterations allowed
 end %if
@@ -17,17 +20,8 @@ if (nargin<6)
     verbose=false;
 end %if
 
-
-%% Make sure we don't start at an inflection point with zero derivative
-if (abs(fprime(x0))<tol)
-    warning(' Attempting to start Newton iterations near an inflection point, you may wish to restart with a different guess...');
-    x0=x0+1;   %bump the guess a ways off of initial value to see if we can get anything sensible
-end %if
-
-
 %% Newton iterations
 it=1;
-eta = .2;
 root=x0;
 fval=f(root);
 converged=false;
