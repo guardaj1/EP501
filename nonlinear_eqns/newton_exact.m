@@ -27,19 +27,18 @@ end %if
 
 %% Newton iterations
 it=1;
-eta = .2;
 root=x0;
 fval=f(root);
 converged=false;
 while(~converged && it<=maxit)
-    derivative = (f(root+eta)-f(root))/eta;
-    if (abs(derivative)<100*tol)                %this (inflection point) will end up kicking the root really far away...
+    derivative=fprime(root);
+    if (abs(derivative)<100*tol)    %this (inflection point) will end up kicking the root really far away...
         converged=false;
         warning(' Derivative close to zero, terminating iterations with failed convergence... ');
         break;
     else
-        root=root-fval./derivative;             % update root estimate
-        fval=f(root);                           % see how far off we are from zero...
+        root=root-fval./derivative;    % update root estimate
+        fval=f(root);                  % see how far off we are from zero...
         if (verbose)
             fprintf(' iteration: %d; root:  %f + %f i; function value: %f, derivative:  %f \n',it,real(root),imag(root),fval,derivative);
         end %if

@@ -9,7 +9,7 @@ function [rootx,rooty,it,success]=newton2D_exact(f,gradf,g,gradg,x0,y0,maxit,tol
 
 
 %% Need access to linear algebra routines for solves at each iteration
-addpath ../linear_algebra;
+addpath C:\Users\JulioG2793\Documents\GitHub\EP501\nonlinear_eqns
 
 
 %% Error checking of input
