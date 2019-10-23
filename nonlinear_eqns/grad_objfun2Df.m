@@ -1,6 +1,6 @@
-function [fx,fy]=grad_objfun2Df(x,y)
+function [fx,fy]=grad_HW2fun2Df(x,y)
 
-fx=3.*x.^2-3.*y;
+fx=2*x
 fy=3.*y.^2-3.*x;
 
 end %function
