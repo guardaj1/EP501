@@ -134,12 +134,21 @@ ny = 2; %order of y
 nz = 2; %order of z
 
 %initial guess
-x0 = 3;
-y0 = -1;
-z0 = 2;
+x0 = [3,-1];
+y0 = [-1,2];
+z0 = [2,-1,];
+rootxb = zeros(1,nx);
+rootyb = zeros(1,ny);
+rootzb = zeros(1,nz);
 
-%find root
-[rootxb,rootyb,rootzb,~,~] = newton3D_exact(fm2,gradfm2,gm2,gradgm2,hm2,gradhm2,x0,y0,z0);
+%find roots
+for i = 1:nx
+    for j = 1:ny
+        for k = 1:nz
+            [rootxb(i),rootyb(j),rootzb(k),~,~] = newton3D_exact(fm2,gradfm2,gm2,gradgm2,hm2,gradhm2,x0(i),y0(j),z0(k));
+        end
+    end
+end
 
 %display results
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
@@ -149,5 +158,4 @@ fprintf('\t1st root: (%f,%f)\n\n',rootxa(1),rootya(1))
 fprintf('\t2st root: (%f,%f)\n\n',rootxa(2),rootya(2))
 
 disp('Problem 4b:')
-disp('One Root of 3D system of equations:')
-fprintf('\t1st root: (%f,%f,%f)\n\n',rootxb(1),rootyb(1),rootzb(1))
+

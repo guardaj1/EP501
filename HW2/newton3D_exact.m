@@ -1,9 +1,9 @@
-function [rootx,rooty,it,success]=newton2D_exact(f,gradf,g,gradg,x0,y0,maxit,tol,verbose)
+function [rootx,rooty,rootz,it,success]=newton3D_exact(f,gradf,g,gradg,h,gradh,x0,y0,z0,maxit,tol,verbose)
 
 % root=newton_exact(f,fprime)
 %
-% finds a set of roots corresponding to the function f,g (input as a handle)
-% given a function which computes the derivative
+% finds a set of roots corresponding to the functions f,g,h (input as a handle)
+% given a function which computes the derivatives
 % 
 % requires:  Gauss_elim.m and backsub.m
 
@@ -13,25 +13,27 @@ function [rootx,rooty,it,success]=newton2D_exact(f,gradf,g,gradg,x0,y0,maxit,tol
 addpath D:\Documents\GitHub\EP501\linear_algebra
 
 %% Error checking of input
-narginchk(6,9);   %check for correct number of inputs to function
-if (nargin<7)
+narginchk(9,12);   %check for correct number of inputs to function
+if (nargin<10)
     maxit=100;       %maximum number of iterations allowed
 end %if
-if (nargin<8)
+if (nargin<11)
     tol=1e-6;        %how close to zero we need to get to cease iterations
 end %if
-if (nargin<9)
+if (nargin<12)
     verbose=false;
 end %if
 
 
 %% Make sure we don't start at an inflection point with zero derivative
-[gradfx,gradfy]=gradf(x0,y0);
-[gradgx,gradgy]=gradg(x0,y0);
-if (abs(min([gradfx,gradfy,gradgx,gradgy]))<tol)    %this needs to really check inflection vs. saddle point; will fix later
+[gradfx,gradfy,gradfz]=gradf(x0,y0,z0);
+[gradgx,gradgy,gradgz]=gradg(x0,y0,z0);
+[gradhx,gradhy,gradhz]=gradh(x0,y0,z0);
+if (abs(min([gradfx,gradfy,gradfz,gradgx,gradgy,gradgz,gradhx,gradhy,gradhz]))<tol)    %this needs to really check inflection vs. saddle point; will fix later
     warning(' Attempting to start Newton iterations near an inflection/saddle point, you may wish to restart with a different guess...');
     x0=x0+1;   %bump the guess a ways off of initial value to see if we can get anything sensible
     y0=y0+1;
+    z0=z0+1;
 end %if
 
 
@@ -39,16 +41,20 @@ end %if
 it=1;
 rootx=x0;
 rooty=y0;
-fval=f(rootx,rooty);
-gval=g(rootx,rooty);
+rootz=z0;
+fval=f(rootx,rooty,rootz);
+gval=g(rootx,rooty,rootz);
+hval=h(rootx,rooty,rootz);
 converged=false;
 while(~converged && it<=maxit)
-    [gradfx,gradfy]=gradf(rootx,rooty);
-    [gradgx,gradgy]=gradg(rootx,rooty);
-    A=[gradfx,gradfy; ...
-        gradgx,gradgy];
+    [gradfx,gradfy,gradfz]=gradf(rootx,rooty,rootz);
+    [gradgx,gradgy,gradgz]=gradg(rootx,rooty,rootz);
+    [gradhx,gradhy,gradhz]=gradh(rootx,rooty,rootz);
+    A=[gradfx,gradfy,gradfz; ...
+       gradgx,gradgy,gradgz; ...
+       gradhx,gradhy,gradhz];
     
-    fvec=[fval;gval];
+    fvec=[fval;gval;hval];
     [Amod,ord]=Gauss_elim(A,-1*fvec);
     dxvec=backsub(Amod(ord,:));
     detA=prod(diag(Amod(ord,:)));
@@ -58,8 +64,10 @@ while(~converged && it<=maxit)
     
     rootx=rootx+dxvec(1);
     rooty=rooty+dxvec(2);
-    fval=f(rootx,rooty);                  % see how far off we are from zero...
-    gval=g(rootx,rooty);
+    rootz=rootz+dxvec(3);
+    fval=f(rootx,rooty,rootz);                  % see how far off we are from zero...
+    gval=g(rootx,rooty,rootz);
+    hval=h(rootx,rooty,rootz);
     if (verbose)
         fprintf(' iteration: %d; x:  %f + %f i; y:  %f + %f i; f: %f, g:  %f\n',it,real(rootx),imag(rootx),real(rooty),imag(rooty),fval,gval);
     end %if
