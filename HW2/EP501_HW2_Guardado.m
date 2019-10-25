@@ -1,5 +1,5 @@
-%EP 501
-%Homework 2
+%%
+%EP 501 Homework 2
 %Julio Guardado
 
 clc; clear; close all;
@@ -46,7 +46,7 @@ end
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
 disp('Problem 1:')
 disp('First six roots of 0th order Bessel function:')
-disp(bess0_roots)
+disp(bess0_roots(2:end))
 fprintf('\t(first 5 roots checked against Wolfram Mathworlds Bessel Function Zeros)\n')
 fprintf('\t http://mathworld.wolfram.com/BesselFunctionZeros.html\n\n')
 
@@ -92,6 +92,41 @@ disp('Problem 2b:')
 disp('Roots of x^3-3x^2+4x-2: ')
 disp(rootsb)
 
+%% Problem 3
+%define coefficients of polynomial and function handles
+coeffs = [1,-15,85,-225,274,-120];
+coeffder = [5,-60,255,-450,274];
+
+%find first root
+x0 = .5;
+n = length(coeffs);
+roots = zeros(n-1,1);
+roots(1) = newton_exact_poly(coeffs,coeffder,x0);   %use modified newton_exact that takes in polynomial coefficients
+
+%iterate polynomial division to get roots
+poly = coeffs;
+for i = 2:n-2
+    %polydiv
+    poly = polydiv(poly,roots(i-1));
+    polyderiv = polyder(poly);
+    
+    if(i == n-2)
+        break
+    end
+    
+    %find new root
+    x0 = x0+1;
+    roots(i) = newton_exact_poly(poly,polyderiv,x0);
+end
+
+%find last two roots using quadratic equation
+[roots(n-1),roots(n-2)] = quadrat(poly);
+
+%Display results
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+disp('Problem 3:')
+disp('Roots of Equation 1 using polynomial deflation:')
+disp(roots)
 
 %% Problem 4a
 %define functions
