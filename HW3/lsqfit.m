@@ -12,15 +12,38 @@ sumxx = sum(x.*x);
 sumy = sum(y);
 sumxy = sum(x.*y);
 
-%make array to be solved using gaussian elim
-A(1,1) = N;
-for i = 2
-
-%solve
-a = A\b;
-
-%evaluate fit
-yfit = coeffs(1) + coeffs(2)*x;
-
+%make A array (coeffs = A\b)
+count = 0;
+for ir = 1:n+1
+    for ic = 1:n+1
+        A(ir,ic) = sum(x.^(count));
+        count = count+1;
+    end
+    count = ir;
 end
+
+%make b array
+b = zeros(n+1,1);
+
+for i = 1:n+1
+    b(i) = sum(y.*x.^(i-1));
+end
+
+
+%solve systems of equations
+addpath linear_algebra
+
+[Amod,ord] = Gauss_elim(A,b);
+coeffs = backsub(Amod(ord,:));
+
+rmpath linear_algebra
+
+%evaluate fits
+yfit = zeros(length(x),1);
+for j = 1:n+1
+    yfit = coeffs(i)*x.^(j-1) + yfit;
+end
+
+
+
 

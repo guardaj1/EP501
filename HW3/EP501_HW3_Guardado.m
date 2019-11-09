@@ -5,56 +5,100 @@
 
 clear, clc, close all
 
-%% Problem 1
+%% Problem 1.a + 1.b
 %load test problem
 load test_lsq.mat
 
-%create line and quadratic function
-yline = 5+6*x;
-yquad = 2*x.^2+3*x+6;
-
-%get fit using lsqfit.m
-yfitl1 = lsqfit(x,yline);
-yfitq1 = lsqfit(x,yquad);
+%get first and second order fit using lsqfit.m
+yfitlsq1 = lsqfit(x,ynoisy,1);
+yfitlsq2 = lsqfit(x,ynoisy,2);
 
 %get fit using polyfit and polyval
-yfitl2 = polyfit(x,yline,1);
-yfitl2 = polyval(yfitl2,x);
-yfitq2 = polyfit(x,yquad,1);
-yfitq2 = polyval(yfitq2,x);
+ypolyfit1 = polyval(polyfit(x,ynoisy,1),x);
+ypolyfit2 = polyval(polyfit(x,ynoisy,2),x);
 
-%plot line
-figure(1);
-%Least squares fit
-subplot(2,1,1)
-plot(x,yline,'b-',x,yfitl1,'r--')
-legend('Actual','Fit','location','northwest')
-xlabel('x'); ylabel('y(x)')
-title('lsqfit.m fit')
+%plot results of first order fit from lsqfit.m vs polyfit and polyval
+figure(1)
+%lsqfit.m
+subplot(1,2,1)
+plot(x,ynoisy,'b.',x,yfitlsq1,'r--')
+xlabel('x'); ylabel('y(x)');
+title('First order fit using lsqfit.m')
+legend('Data','Fit','location','northwest')
 
-%matlab fit
-subplot(2,1,2)
-plot(x,yline,'b-',x,yfitl2,'r--')
-legend('Actual','Fit','location','northwest')
-xlabel('x'); ylabel('y(x)')
-title('Polyval fit')
+%polyfit and polyval
+subplot(1,2,2)
+plot(x,ynoisy,'b.',x,ypolyfit1,'r--')
+xlabel('x'); ylabel('y(x)');
+title('First order fit using polyfit')
+legend('Data','Fit','location','northwest')
 
-%plot quadratic
-figure(2);
-title('Fit of a quadratic function')
-%Least squares fit
-subplot(2,1,1)
-plot(x,yquad,'b-',x,yfitq1,'r--')
-legend('Actual','Fit','location','northwest')
-xlabel('x'); ylabel('y(x)')
-title('lsqfit.m fit')
+%plot results of second order fit from lsqfit.m vs polyfit and polyval
+figure(2)
+%lsqfit.m
+subplot(1,2,1)
+plot(x,ynoisy,'b.',x,yfitlsq2,'r--')
+xlabel('x'); ylabel('y(x)');
+title('Second order fit using lsqfit.m')
+legend('Data','Fit','location','northwest')
 
-%matlab fit
-subplot(2,1,2)
-plot(x,yquad,'b-',x,yfitq2,'r--')
-legend('Actual','Fit','location','northwest')
-xlabel('x'); ylabel('y(x)')
-title('Polyval fit')
+%polyfit and polyval
+subplot(1,2,2)
+plot(x,ynoisy,'b.',x,ypolyfit2,'r--')
+xlabel('x'); ylabel('y(x)');
+title('Second order fit using polyfit')
+legend('Data','Fit','location','northwest')
+
+
+%% Problem 1.c + 1.d
+%compute fits
+yfitlsq3 = lsqfit(x,ynoisy,3);
+
+%compute chi squared values
+chi1 = gof(ynoisy,yfitlsq1,sigmay);
+chi2 = gof(ynoisy,yfitlsq2,sigmay);
+chi3 = gof(ynoisy,yfitlsq3,sigmay);
+
+%determine best order of fit from chi squared values
+disp('Chi Squared values for linear, quadratic, and cubic fits:')
+fprintf('\t Linear:     %f\n',chi1)
+fprintf('\t Quardratic: %f\n',chi2)
+fprintf('\t Cubic:      %f\n\n',chi3)
+disp('Cubic fit is the best fit')
+
+figure(3)
+plot(x,ynoisy,'b.',x,ypolyfit3,'r--')
+xlabel('x'); ylabel('y(x)');
+title('Fit of best order according to chi squared values')
+legend('Data','Fit','location','northwest')
+
+
+%% Problem 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
