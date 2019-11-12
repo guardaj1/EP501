@@ -37,7 +37,6 @@ test_ans = L\bL;
 answer = forwardsub_lt(L,bL);
 
 %display solution
-%display solution
 fprintf('\tMATLAB:\t  forward_sub.lt.m:\n')
 disp(cat(2,test_ans,answer))
 

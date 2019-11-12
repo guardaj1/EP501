@@ -67,16 +67,40 @@ fprintf('\t Cubic:      %f\n\n',chi3)
 disp('Cubic fit is the best fit')
 
 figure(3)
-plot(x,ynoisy,'b.',x,ypolyfit3,'r--')
+plot(x,ynoisy,'b.',x,yfitlsq3,'r--')
 xlabel('x'); ylabel('y(x)');
 title('Fit of best order according to chi squared values')
 legend('Data','Fit','location','northwest')
 
 
 %% Problem 2
+%load test problem
+load test_interp.mat
 
+%perform interpolation using bilin_interp.m
+f_biinterp = bilin_interp(xg,yg,f2D,xgi,ygi);
 
+%interpolate with built in function
+[Xg,Yg] = meshgrid(xg,yg);
+[Xgi,Ygi] = meshgrid(xgi,ygi);
+f_interp2 = interp2(Xg,Yg,f2D,Xgi,Ygi);
 
+%plot original function
+figure(4)
+imagesc(xg,yg,f2D)
+colorbar;
+title('Original Function')
+
+%plot bilin_interp.m interpolated function
+figure(5)
+imagesc(xgi,ygi,f_biinterp)
+colorbar;
+title('bilin\_interp.m')
+
+figure(6)
+imagesc(xgi,ygi,f_interp2)
+colorbar;
+title('interp2.m')
 
 
 
