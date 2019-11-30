@@ -61,6 +61,7 @@ axis xy
 subplot(1,4,4)
 quiver(x,y,Bx,By,0)
 title('B')
+colormap(bone(50));
 
 %% Problem 1c+1d
 %calculate curl of B numerically
@@ -90,10 +91,10 @@ numeric_curl = curlx - curly;
 analytic_curl = zeros(size(Bx));
 for ix = 1:lx
     for iy = 1:ly
-        if sqrt(X(ix,iy)^2 + Y(ix,iy)^2) < a
-            analytic_curl(ix,iy) = mu_naught*I/(2*pi*a^2)*(1/sqrt(X(ix,iy)^2+Y(ix,iy)^2));
-        elseif sqrt(X(ix,iy)^2 + Y(ix,iy)^2) >= a
-            analytic_curl(ix,iy) = mu_naught*I/(2*pi*a^2)*(1/sqrt(X(ix,iy)^2+Y(ix,iy)^2));
+        if sqrt(x(ix)^2 + y(iy)^2) < a
+            analytic_curl(ix,iy) = mu_naught*I/(2*pi*a^2);
+        elseif sqrt(x(ix)^2 + y(iy)^2) >= a
+            analytic_curl(ix,iy) = 0;
         end
     end
 end
@@ -131,10 +132,10 @@ phi = 0.*X;
 for ix = 1:lx
     for iy = 1:ly
         for iz = 1:lz
-        if sqrt(X(iy,ix,iz)^2 + Y(iy,ix,iz)^2 + Z(iy,ix,iz)) < a
-            phi(iy,ix,iz) = Q/(4*pi*epsilon*a) + Q/(8*pi*epsilon*a^3)*(X(iy,ix,iz)^2+Y(iy,ix,iz)^2+Z(iy,ix,iz)^2-a^2);
-        elseif sqrt(X(iy,ix,iz)^2 + Y(iy,ix,iz)^2 + Z(iy,ix,iz)) >= a
-            phi(iy,ix,iz) = Q/(4*pi*epsilon*sqrt(X(iy,ix,iz)^2+Y(iy,ix,iz)^2+Z(iy,ix,iz)^2));
+        if sqrt(x(ix)^2+y(iy)^2+z(iz)^2) < a
+            phi(iy,ix,iz) = Q/(4*pi*epsilon*a) + Q/(8*pi*epsilon*a^3)*(x(ix)^2+y(iy)^2+z(iz)^2-a^2);
+        elseif sqrt(x(ix)^2+y(iy)^2+z(iz)^2) >= a
+            phi(iy,ix,iz) = Q/(4*pi*epsilon*sqrt(x(ix)^2+y(iy)^2+z(iz)^2));
         end %if
         end %for z
     end %for y
@@ -142,12 +143,14 @@ end %for x
 
 %plot
 figure(3);
-imagesc(x,y,phi(:,:,50))
+imagesc(x,y,phi(:,:,25))
 axis xy
+colormap(bone(50));
+colorbar;
 
 
 %% Problem 2
-W = -1/2
+W = -1/2;
 
 
 
