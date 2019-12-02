@@ -206,12 +206,11 @@ x = linspace(-3*a,3*a,lx);
 y = linspace(-3*a,3*a,ly);
 
 %plot path with 
-figure(5)
-imagesc(x,y,Bmag)
+figure(1)
+subplot(1,4,3)
 hold on
 plot(x_phi,y_phi)
 hold off
-title('|B| with Parametric Path')
 
 %% Problem 2c
 %allocate space for derivatives
@@ -237,16 +236,10 @@ drdp_xreal = -r0*sin(phi);
 drdp_yreal = r0*cos(phi);
 
 %plot derivatives
-figure(6);
-subplot(1,2,1)
-plot(drdp_x,drdp_y)
-title('Numerically Computed Derivative')
-subplot(1,2,2)
-plot(drdp_xreal,drdp_yreal)
-title('Analytical Derivative')
+figure(5)
 
 
-%% Problem 2e
+
 
 
 
