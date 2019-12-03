@@ -7,8 +7,8 @@ mu = 4*pi*10^(-7);      %H/m
 a = .005;                      %m
 
 %define grid
-lx = 100;
-ly = 100;
+lx = 50;
+ly = 50;
 x = linspace(-3*a,3*a,lx);
 y = linspace(-3*a,3*a,ly);
 [X,Y] = meshgrid(x,y);
@@ -37,29 +37,29 @@ end %for x
 % plot
 figure(1)
 %bx
-subplot(1,4,1)
+subplot(1,3,1)
 imagesc(x,y,Bx)
 title('Bx')
 colorbar;
 axis xy
 
 %by
-subplot(1,4,2)
+subplot(1,3,2)
 imagesc(x,y,By)
 title('By')
 colorbar;
 axis xy
 
 %b
-subplot(1,4,3)
+subplot(1,3,3)
 imagesc(x,y,Bmag)
 title('|B|')
 colorbar;
 axis xy
 
-%bx
-subplot(1,4,4)
-quiver(x,y,Bx,By,0)
+%B
+figure(2)
+quiver(x,y,Bx,By,'AutoScale','off')
 title('B')
 
 %% Problem 1c+1d
@@ -98,7 +98,7 @@ for ix = 1:lx
     end
 end
 
-figure(2)
+figure(3)
 subplot(1,2,1)
 imagesc(x,y,numeric_curl)
 axis xy
@@ -132,7 +132,7 @@ for ix = 1:lx
     for iy = 1:ly
         for iz = 1:lz
             if sqrt(x(ix)^2+y(iy)^2+z(iz)^2) < a
-                phi(iy,ix,iz) = Q/(4*pi*eps*a) + (Q/(8*pi*eps*a^3))*(x(ix)^2+y(iy)^2+z(iz)^2-a^2);
+                phi(iy,ix,iz) = Q/(4*pi*eps*a) - (Q/(8*pi*eps*a^3))*(x(ix)^2+y(iy)^2+z(iz)^2-a^2);
             elseif sqrt(x(ix)^2+y(iy)^2+z(iz)^2) >= a
                 phi(iy,ix,iz) = Q/(4*pi*eps*sqrt(x(ix)^2+y(iy)^2+z(iz)^2));
             end %if
@@ -141,16 +141,16 @@ for ix = 1:lx
 end %for x
 
 %plot
-figure(3);
-imagesc(x,y,phi(:,:,25))
+figure(4);
+imagesc(x,y,phi(:,:,50))
 title('Scalar Potential')
 axis xy
 colorbar;
 
 %calculate laplacian
-figure(4);
+figure(5);
 lapl_phi = delsqr(phi,x(2)-x(1));
-imagesc(lapl_phi(:,:,25))
+imagesc(lapl_phi(:,:,50))
 title('Laplacian of Potential')
 colorbar;
 axis xy;
@@ -206,7 +206,7 @@ x = linspace(-3*a,3*a,lx);
 y = linspace(-3*a,3*a,ly);
 
 %plot path with 
-figure(5)
+figure(6)
 imagesc(x,y,Bmag)
 hold on
 plot(x_phi,y_phi)
@@ -214,6 +214,21 @@ hold off
 title('|B| with Parametric Path')
 
 %% Problem 2c
+%calculate B at r
+B_phix = zeros(size(x_phi));
+B_phiy = zeros(size(y_phi));
+for ip = 1:lp
+    B_phix(ip) = (mu*I/(2*pi*sqrt(x_phi(ip)^2 + y_phi(ip)^2)))*(-y_phi(ip)/sqrt(x_phi(ip)^2 + y_phi(ip)^2));
+    B_phiy(ip) = (mu*I/(2*pi*sqrt(x_phi(ip)^2 + y_phi(ip)^2)))*(x_phi(ip)/sqrt(x_phi(ip)^2 + y_phi(ip)^2));
+end %for
+
+B_phi = sqrt(B_phix.^2 + B_phiy.^2);
+
+%plot components
+figure(7)
+plotyy(x_phi,B_phix,y_phi,B_phiy)
+title('Components of B along the Parametric Path')
+%% Problem 2d
 %allocate space for derivatives
 drdp_x = zeros(size(x_phi));
 drdp_y = drdp_x;
@@ -237,7 +252,7 @@ drdp_xreal = -r0*sin(phi);
 drdp_yreal = r0*cos(phi);
 
 %plot derivatives
-figure(6);
+figure(8);
 subplot(1,2,1)
 plot(drdp_x,drdp_y)
 title('Numerically Computed Derivative')
@@ -247,7 +262,18 @@ title('Analytical Derivative')
 
 
 %% Problem 2e
+%calculate integrand by taking dot product
+bxdl = B_phix.*drdp_x;
+bydl = B_phiy.*drdp_y;
+Bdl = bxdl+bydl;
 
+%perform numerical integral
+current = num_int(Bdl,phi)/mu;
+
+%display result
+
+disp('Current in the loop in Amps is: ')
+disp(current)
 
 
 
