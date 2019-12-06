@@ -4,26 +4,20 @@ a=0;     %here a,b are the endpoints of the x-domain
 b=1;     %use a square region for a test problem
 x=linspace(a,b,lx);
 dx=x(2)-x(1);        %grid spacing
-dt=0.015;              %time step
-t=0:dt:10;
+
+v=1;            %velocity of wave propagation
+targetCFL=0.9;
+dt=targetCFL*dx/v;
+N=75;           %number of time steps to take
+t=0:dt:N*dt;
 lt=numel(t);
 
 
-%% Paramters of the PDE
-v=1;            %velocity of wave propagation
-CFL=v*dt/dx;    %CFL number should be <=1
-
-
-%% Set the initial conditions
+%% Initial conditions for our test problem
 x0=1/2*(a+b);
 sigx=1/15*(b-a);
-finitial=exp(-(x-x0).^2/2/sigx^2);
-
-figure(1);
-plot(x,finitial);
-xlabel('x');
-ylabel('f(x,t_0)');
-set(gca,'FontSize',24);
+%finitial=exp(-(x-x0).^2/2/sigx^2);
+finitial=exp(-(x-x0).^20/2/sigx^20);
 
 
 %% Analytical solution
@@ -73,80 +67,38 @@ set(gca,'FontSize',24);
 % end %for
 % 
 % 
-% %% Lax-Friedrich's method
-% figure(3);
-% 
-% flax=zeros(lx,lt);
-% flax(:,1)=finitial;
-% 
-% %ghost cell values for implementing boundary conditions
-% fleft=zeros(2,1);
-% fright=zeros(2,1);
-% 
-% for n=1:lt-1
-%     fleft=flax(lx-1:lx,n);    %ghost cells here implement periodic boundary conditions
-%     fright=flax(1:2,n);
-%     
-%     flax(1,n+1)=1/2*(fleft(2)+flax(2,n))-dt/2/dx*v*(flax(2,n)-fleft(2));
-%     for i=2:lx-1     %interior grid points
-%         flax(i,n+1)=1/2*(flax(i-1,n)+flax(i+1,n))-dt/2/dx*v*(flax(i+1,n)-flax(i-1,n));
-%     end %for
-%     flax(lx,n+1)=1/2*(flax(lx-1,n)+fright(1))-dt/2/dx*v*(fright(1)-flax(lx-1,n));
-%     
-%     plot(x,flax(:,n));
-%     xlabel('x');
-%     ylabel('f(x,t)');
-%     title('L-F');
-%     set(gca,'FontSize',24);
-%     pause(0.1);
-% end %for
 
 
-%% Lax-Wendroff
-figure(4);
+%% Lax-Friedrichs, Lax-Wendroff, Upwind (Godunov), and BTCS comparison
+figure(3);
+
+flax=zeros(lx,lt);
+flax(:,1)=finitial;
 
 flw=zeros(lx,lt);
 flw(:,1)=finitial;
 
-%ghost cell values for implementing boundary conditions
-fleft=zeros(2,1);
-fright=zeros(2,1);
-fhalf=zeros(lx+1,1);
+fgod=zeros(lx,lt);
+fgod(:,1)=finitial;
 
+fBTCS=zeros(lx,lt);
+fBTCS(:,1)=finitial;
 for n=1:lt-1
-    fleft=flw(lx-1:lx,n);    %ghost cells here implement periodic boundary conditions
-    fright=flw(1:2,n);
-    
-    %half step lax-f update for cell edges. note indexing for fhalf,
-    %i->i-1/2, i+1->i+1/2
-    fhalf(1)=1/2*(fleft(2)+flw(1,n))-dt/2/dx*v*(flw(1,n)-fleft(2));
-    for i=2:lx     %interior grid points
-        fhalf(i)=1/2*(flw(i-1,n)+flw(i,n))-dt/2/dx*v*(flw(i,n)-flw(i-1,n));
-    end %for
-    fhalf(lx+1)=1/2*(flw(lx,n)+fright(1))-dt/2/dx*v*(fright(1)-flw(lx,n));
-    
-    %full time step LW update
-    flw(1,n+1)=flw(1,n)-dt/dx*v*(fhalf(2)-fhalf(1));
-    for i=2:lx-1     %interior grid points    
-      flw(i,n+1)=flw(i,n)-dt/dx*v*(fhalf(i+1)-fhalf(i));
-    end %for
-    flw(lx,n+1)=flw(lx,n)-dt/dx*v*(fhalf(lx+1)-fhalf(lx));
-    
-    plot(x,flw(:,n));
+    flax(:,n+1)=LaxFried(dt,dx,v,flax(:,n));
+    flw(:,n+1)=LaxWen(dt,dx,v,flw(:,n));
+    fgod(:,n+1)=Godunov(dt,dx,v,fgod(:,n));
+    fBTCS(:,n+1)=BTCS_hyp(dt,dx,v,fBTCS(:,n));
+        
+    plot(x,flax(:,n+1),x,flw(:,n+1),x,fgod(:,n+1),x,fBTCS(:,n+1));
+    legend('Lax-F','Law-W','Upwind','BTCS');
     xlabel('x');
     ylabel('f(x,t)');
-    title('L-W');
+    title(sprintf('Solver comparison, t=%5.3f',t(n)));
     set(gca,'FontSize',24);
-    pause(0.1);
+    
+    if (n==1)
+        pause;
+    else
+        pause(0.1);
+    end %if
 end %for
-
-
-%% Upwinding 
-
-
-%% Problems with implicit approaches to waves
-
-
-%% Godunov's method
-
-
