@@ -93,32 +93,32 @@ vy_rk4(1)=1e3;
 vx_rk4(1)=1e3;
 for n=2:lt
     %calculate vx and vy at several time steps
-    vx1 = dt*omega*vx_rk4(n-1);
-    vx2 = dt*omega*(vx_rk4(n-1)+vx1/2);
-    vx3 = dt*omega*(vx_rk4(n-1)+vx2/2);
-    vx4 = dt*omega*vx_rk4(n-1)+vx3;
+    vx1 = dt*vx_rk4(n-1);
+    vx2 = dt*(vx_rk4(n-1)+vx1/2);
+    vx3 = dt*(vx_rk4(n-1)+vx2/2);
+    vx4 = dt*vx_rk4(n-1)+vx3;
     
-    vy1 = dt*omega*vy_rk4(n-1);
-    vy2 = dt*omega*(vy_rk4(n-1)+vy1/2);
-    vy3 = dt*omega*(vy_rk4(n-1)+vy2/2);
-    vy4 = dt*omega*vy_rk4(n-1)+vy3;
+    vy1 = dt*vy_rk4(n-1);
+    vy2 = dt*(vy_rk4(n-1)+vy1/2);
+    vy3 = dt*(vy_rk4(n-1)+vy2/2);
+    vy4 = dt*vy_rk4(n-1)+vy3;
     
     %now the full update
-    vx_rk4(n)=vx_rk4(n-1)+1/6*omega*(vx1+2*vx2+2*vx3+vx4);
-    vy_rk4(n)=vy_rk4(n-1)-1/6*omega*(vy1+2*vy2+2*vy3+vy4);    
+    vx_rk4(n)=vx_rk4(n-1)+1/6*(vx1+2*vx2+2*vx3+vx4);
+    vy_rk4(n)=vy_rk4(n-1)+1/6*(vy1+2*vy2+2*vy3+vy4);    
 end %for
 
 %plot rk2 vs rk4
 figure(3)
-ax = plotyy(t,vx_rk2,t,vy_rk2);
+plotyy(t,vx_rk2,t,vy_rk2);
 title('RK2')
 xlabel('time (s)');
-ylabel(ax(1),'v_x');
-ylabel(ax(2),'v_y');
+ylabel('v_x');
+ylabel('v_y');
 
 figure(4)
-ax = plotyy(t,vx_rk4,t,vy_rk4);
+plotyy(t,vx_rk4,t,vy_rk4);
 title('RK4')
 xlabel('time (s)');
-ylabel(ax(1),'v_x');
-ylabel(ax(2),'v_y');
+ylabel('v_x');
+ylabel('v_y');
