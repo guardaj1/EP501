@@ -58,6 +58,29 @@ The first two problems are intended to have written solutions and the third prob
   \item (25 pts) In class we discussed many of the complexities of numerically solving PDEs, particularly that different methods are often needed for different types of equations, and that certain methods can generate artifacts or be unconditionally unstable.  Construct a $\sim$2-4 page, typeset (in Word, Pages, or \LaTeX -- with equations as appropriate) set of notes that \emph{provides a survey of numerical approaches to PDEs}.  Write your notes in narrative form (viz. using complete sentences and proper grammar). Include the following items in your survey:
     \begin{itemize}
       \item Definitions different PDE types (elliptic, hyperbolic, and parabolic)
+      
+      \textbf{Numerical Approaches to PDEs}
+      
+      Partial differential equations (PDEs) are equations that involve functions of multiple variables and the partial derivatives of those functions. The three main types of PDEs are elliptic, hyperbolic, and parabolic and they are classified as follows.
+      
+      In the case where a PDE takes the form:
+      
+      \begin{equation}
+      au_{xx} + bu_{xy} + cu_{yy} = 0, u = u(x,y)
+      \end{equation}
+      
+      its classification is determined by the value of the following relation:
+      
+      \begin{equation}
+      b^2 - 4ac
+      \end{equation}
+      
+      This function is elliptic if this value is less than 0, hyperbolic if it is greater than 0, and parabolic if it equals 0.
+      
+      \textbf{Elliptic PDEs:}
+      
+      
+      
       \item An example of a typical physical/engineering system, for each PDE type, that can be modeled with these equations.
       \item Discuss, in qualitative/intuitive terms, the basic features of the exact solutions of each of these types of equations.  You do not need to solve the equations just describe characteristics of the solution (what they ``look like'').
       \item The finite difference approach to solving elliptic equations, leading to a system of equations.  Give example equations.  
@@ -92,5 +115,7 @@ The first two problems are intended to have written solutions and the third prob
     \end{enumerate}
     
 \end{enumerate}
+
+http://www.csc.kth.se/utbildning/kth/kurser/DN2266/matmod11/PDE1_2p.pdf
 
 \end{document}

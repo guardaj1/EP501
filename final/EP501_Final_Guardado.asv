@@ -1,0 +1,52 @@
+%% EP 501 Final
+% Julio Guardado
+
+clc;clear;close all
+%% Problem 3
+%% Define constants
+% Define space grid
+lx = 100;
+x = linspace(0,1,lx);
+dx = x(2)-x(1);
+
+%constants
+lambda = .25;
+v=20;            %velocity of wave propagation
+
+%initial condition
+finitial=exp(-(x-.5).^8/(2*.1^8));
+
+%% Part a: implicit solution
+%set stable time step for implicit solution
+dt=1/lambda/2*dx^2;
+t=0:dt:.5;
+lt=numel(t);
+
+fimpli=zeros(lx,lt);
+fimpli(:,1)=finitial;
+
+for n=1:lt-1
+    fimpli(1,n+1)=0;   %assume temperature goes to some small number on left boundary
+    for i=2:lx-1      %interior grid points
+        fimpli(i,n+1)=fimpli(i,n)+dt/dx^2*lambda*(fimpli(i+1,n)-2*fimpli(i,n)+fimpli(i-1,n));
+    end %for
+    fimpli(lx,n+1)=0;  %assume temperature goes to some small number on right boundary
+end %for
+
+for n = 1:lt-1
+    fimpli(:,n+1)=Godunov(dt,dx,v,fimpli(:,n));
+end
+
+figure(3)
+for n = 1:lt
+    imagesc(t,x,fimpli(:,n))
+    axis xy
+    colorbar
+    caxis([0 1])
+    
+    if n ==1
+        pause
+    else
+    pause(.1)
+    end %if
+end %for
