@@ -1,3 +1,3 @@
-function fval=fRK(t,y,alpha)
+function fval=fRK(y,alpha)
    fval=-alpha*y;
 end %function

@@ -53,32 +53,23 @@ M = zeros(lx,lx);
 b = zeros(lx,1);
 
 %build matrix
-M(1,1) = -1/dx;
-M(1,2) = 1/dx; 
-M(lx,lx) = 1;
 for ix = 2:lx-1
     %alpha
-    M(ix,ix-1) = eps(ix)/dx^2 + deps_dx(ix)/(2*dx);
+    M(ix,ix+1) = eps(ix)/dx^2 + deps_dx(i)/(2*dx);
     
     %beta
     M(ix,ix) = -2*eps(ix)/dx^2;
     
     %gamma
-    M(ix,ix+1) = eps(ix)/dx^2 - deps_dx(ix)/(2*dx);
+    M(ix,ix-1) = eps(i)/dx^2 - deps_dx(i)/(2*dx);
     
 end %for
 
 %apply BCs
+
 b(1) = 1000;
 b(lx) = 100;
 
-%solve
-soln = M\b;
-
-figure(2)
-plot(x,soln)
-title('Electric Potential')
-xlabel('x(m)'); ylabel('Potential (V)')
 %% Problem 2
 %set up
 m = 1.67e-27;   %kg
