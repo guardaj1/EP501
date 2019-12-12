@@ -3,63 +3,16 @@
 \usepackage{fullpage}
 \usepackage{hyperref}
 \usepackage{amsmath}
-\usepackage{amssymb}
-%\usepackage{draftwatermark}
+\usepackage{amssymb}	  
 
-%\SetWatermarkText{DRAFT}
-%\SetWatermarkScale{3}
-%\SetWatermarkLightness{0.5}
+\begin{document}	  
+\title{EP 501 Final Exam Problem 2}
+\author{Julio Guardado}
 
-\begin{document}
-
-\title{EP 501 Final exam}
-
-\maketitle
-
-This is a take-home exam (work ALL problems) to be turned in 48 hours from the time it is posted (see canvas due date), unless you have notified me of a medical issue, family emergency, or other extenuating circumstance.  Unexcused late exams will not be graded.  
-
-I will also be checking my email regularly over the next 48 hours to answer questions.  If you do not understand a question, please ask for a clarification.  
-
-You MAY NOT work in groups or discuss details of the solution to these or similar problems with other students or faculty.  You also MAY NOT use online ``work this problem for me'' resources (i.e. you must complete this problem without direct assistance of another human being).  You ARE ALLOWED to use internet references, your notes, textbooks, and other resources such as physics books, differential equations books, integral tables, the TI-89, or mathematical software like Mathematica, Matlab, Maple, and similar.  
-
-Include citations, where appropriate, to results that you use for your solutions (e.g. ``Jackson eqn. 3.70'' ``Wolfram website'' ``Maple software'' and so on) and make sure that your work is completely described by your solution (i.e. it adequately developed and explained).   Please start a new page for each problem.  You must submit your solution via CANVAS as a .zip file with Matlab codes and Word, Pages, or \LaTeX text.
-
-The first two problems are intended to have written solutions and the third problem is intended to have a Matlab script solution.  However, you may take any approach you watn to any of these problems.  Please submit all codes that you generate for this exam.  
-
-%\textbf{If you absolutely have no idea how to approach a problem you should email me.}  I can give hints to get you unstuck but it will reduce your maximum possible score (to be fair to others).  Requests for clarification will not affect your score in any way.  
-
-%If a question is ambiguous or seems unconstrained, please ask for clarification.  Each problem is intended to produce a fairly specific answer so let me know if you don't understand what I'm asking for.  
-
-\emph{You must sign (below) and attach this page to the front of your solution when you submit your solutions for this exam}.  Electronic signatures are acceptable and encouraged.  If you are typing up your solution in \LaTeX, please note that the source code for this document is included in the course repository.  
-
-~\\~\\~\\~\\~\\~\\~\\~\\~\\~\\~\\~\\~\\~\
-
-\emph{I, \rule{7.5cm}{0.15mm} , confirm that I did not discuss the solution to these problems with anyone else.}
-
+\maketitle	  
 \pagebreak
 
-\begin{enumerate}
-
-  \item (25 pts) Consider an ODE:  
-  \begin{equation}
-    \frac{d f}{d t} = -\alpha f \qquad (\alpha > 0)
-  \end{equation}
-  differenced in the ``non-standard'' form:
-  \begin{equation}
-    \frac{f^{n+1}-f^n}{\Delta t} = - \alpha \left( \frac{2}{3} f^n + \frac{1}{3} f^{n+1} \right)
-  \end{equation}  
-  \begin{enumerate}
-    \item[(a)] Develop an update formula ($f^{n+1}=...$) for this ``non-standard'' method
-    \item[(b)] Derive the conditions under which this method is stable
-    \item[(c)] Rigorously determine whether this method consistent, viz. whether the numerical solution approaches the exact solution in the limit as $\Delta t \rightarrow 0$.
-    \item[(d)] What is the order of accuracy of the method (e.g. it is $\mathcal{O}(\Delta t^m)$ accurate, you need to find $m$)?
-  \end{enumerate}
-
-  \item (25 pts) In class we discussed many of the complexities of numerically solving PDEs, particularly that different methods are often needed for different types of equations, and that certain methods can generate artifacts or be unconditionally unstable.  Construct a $\sim$2-4 page, typeset (in Word, Pages, or \LaTeX -- with equations as appropriate) set of notes that \emph{provides a survey of numerical approaches to PDEs}.  Write your notes in narrative form (viz. using complete sentences and proper grammar). Include the following items in your survey:
-    \begin{itemize}
-      \item Definitions different PDE types (elliptic, hyperbolic, and parabolic)
-      
-      \textbf{Numerical Approaches to PDEs}
+	  \textbf{Numerical Approaches to PDEs}
       
       Partial differential equations (PDEs) are equations that involve functions of multiple variables and the partial derivatives of those functions. The three main types of PDEs are elliptic, hyperbolic, and parabolic and they are classified as follows.
       
@@ -157,15 +110,15 @@ The first two problems are intended to have written solutions and the third prob
       
       However, this stability is ruined when $v < 1$. In this case, a forward time, forward space update method can be applied and be stable under the same conditions. By combining these two update formulas, Godunov's method can be obtained. This method employs the concept of upwinding to ensure the solution remains stable. Upwinding involves the use of data "behind" the flow to compute the derivative. This results in the following update formula:
       
-      $$ f^{n+1}_{i} = \left\{
-      \begin{array}
-      	 f^{n}_{i} - \frac{v\Delta t}{\Delta x}\left(f^{n}_{i+1} - f^{n}_{i}\right) & v < 0  \\
-      	 f^{n}_{i} - \frac{v\Delta t}{\Delta x}\left(f^{n}_{i} - f^{n}_{i-1}\right) & v > 0 \\ 
-      \end{array}$$
+      if $v<0$
+       $$ f^{n+1}_{i} = f^{n}_{i} - \frac{v\Delta t}{\Delta x}\left(f^{n}_{i+1} - f^{n}_{i}\right)$$
+       
+       if $v>0$
+       $$ f^{n+1}_{i} = f^{n}_{i} - \frac{v\Delta t}{\Delta x}\left(f^{n}_{i} - f^{n}_{i-1}\right)$$
       
       
       
-      \bigskip
+      \bigbreak
       
       Another conditionally stable method of solving hyperbolic equations is the Lax-Wendroff Method. In order to derive this method, the Lax-Fredrich method must first be discussed. The Lax-Fredrich method employs an FTCS update formula and stabilizes it by introducing an artificial viscosity (averaging of adjacent cells) in the system. This artificial viscosity is a form of numerical diffusion. Numerical diffusion is the tendency for a solution to diffuse in the absence of a true physical viscosity term. This occurs due to truncation errors in finite difference formulas. Although it is a source of error, it allows for the use of FTCS solutions if absolutely necessary. The update formula for the Lax-Fredrich method is as follows:
       
@@ -193,7 +146,7 @@ The first two problems are intended to have written solutions and the third prob
       
       Both the Lax-Wendroff method and the Godunov method require initial conditions to begin iterating.
       
-      \bigbreak
+      \pagebreak
       
       \textbf{Parabolic Equations:}
       
@@ -223,6 +176,8 @@ The first two problems are intended to have written solutions and the third prob
       This method is very straight forward and is stable when $\Delta t \le \frac{\lambda}{2}\Delta x^2$. From this condition, it is clear that fine space grids will require a large amount of small time steps to achieve stability. 
       \bigskip
       
+      
+      \bigbreak    
       \textit{Explicit Methods:}
       
       In order to obtain an explicit method for solving parabolic PDEs, it is necessary to use backward time, centered space euler differences.  After substituting these euler differences into the original formula, the following equation emerges:
@@ -233,7 +188,7 @@ The first two problems are intended to have written solutions and the third prob
       T_{i+1}^{n+1}\left(\frac{-\lambda}{\Delta x^2}\right) = \frac{T_{i}^{n}}{\Delta t} 
       \end{equation}
       
-      This can be expressed in matrix notation as $\underline{\underline{M}}}\underline{T} = \underline{b}$ where $\underline{\underline{M}}}$ is a diagonally dominant matrix containing the coefficients of $T_i^n$, $\underline{T}$ is the vector containing the solution, and $\underline{b}$ is the right hand side of the equation. This system can be solved using any linear algebra solver, such as Jacobi iteration or Gaussian elimination. An extension of this system of equations is the Crank-Nicholson method, also known as the trapezoidal method. This method uses a second order, centered in time finite difference. The resulting system of equations is as follows:
+      This can be expressed in matrix notation as $\underline{\underline{M}} \underline{T} = \underline{b}$ where $\underline{\underline{M}}$ is a diagonally dominant matrix containing the coefficients of $T_i^n$, $\underline{T}$ is the vector containing the solution, and $\underline{b}$ is the right hand side of the equation. This system can be solved using any linear algebra solver, such as Jacobi iteration or Gaussian elimination. An extension of this system of equations is the Crank-Nicholson method, also known as the trapezoidal method. This method uses a second order, centered in time finite difference. The resulting system of equations is as follows:
   
       \begin{equation}
       T_{i-1}^{n+1}\left(\frac{-\lambda}{2\Delta x^2}\right) + 
@@ -241,42 +196,5 @@ The first two problems are intended to have written solutions and the third prob
       T_{i+1}^{n+1}\left(\frac{-\lambda}{2\Delta x^2}\right) = 
       \frac{T_{i}^{n}}{\Delta t} - \frac{\lambda}{2}\frac{T_{i+1}^{n}-2T_{i}^{n}+T_{i-1}^{n+1}}{\Delta x^2}
       \end{equation} 
-             
-      \item An example of a typical physical/engineering system, for each PDE type, that can be modeled with these equations.
-      \item Discuss, in qualitative/intuitive terms, the basic features of the exact solutions of each of these types of equations.  You do not need to solve the equations just describe characteristics of the solution (what they ``look like'').
-      \item The finite difference approach to solving elliptic equations, leading to a system of equations.  Give example equations.  
-      \item Discuss various options available for solving the large set of FDEs that result.  
-      \item Finite difference approaches to solving parabolic equations; discuss the use of explicit vs. implicit methods and give one example of each type of method, including equations and methods of solution (e.g. simple algebraic update formula vs. system of equations).
-      \item Discuss two different conditionally stable methods for solving hyperbolic equations.  Also discuss the drawbacks of each of these methods.  
-      \item Define numerical diffusion and discuss, conceptually, its role in stabilizing the Lax-Friedrichs method.  
-      \item Define and explain the advantage of upwinding.  Describe, conceptually, why it is used as the basis for many numerical methods for solving hyperbolic equations.  
-      \item Include a list of references for your survey.
-    \end{itemize}
-    
-    \item (50 pts) Explore two different methods to solve the advection-diffusion equation.
-    \begin{equation}
-      \frac{\partial f}{\partial t} + \underbrace{v \frac{\partial f}{\partial x}}_{\text{hyperbolic term}} - \underbrace{\lambda \frac{\partial^2 f}{\partial x^2}}_{\text{parabolic term}}=0
-    \end{equation} 
-    \begin{enumerate}
-      \item[(a)]  Derive an explicit time update formula for your method using the following differencing approach:  (1) a forward Euler time differencing, (2) an upwind difference for the hyperbolic term (describing advection) and (3) a centered difference for the parabolic term (describing diffusion). 
-      \item[(b)]  Solve this equation for $f(x,t)$ numerically in Matlab using the parameters:
-      \begin{eqnarray}
-        v &=& 20 \\
-        \lambda &=& 0.25
-      \end{eqnarray}
-      on the domain $0 \le x \le 1$, $0 \le t \le 0.05$ with initial condition:
-      \begin{equation}
-        f(x,0)=e^{-\frac{(x-0.5)^8}{2(0.1)^8}}
-      \end{equation}
-      and plot your result vs. space and time using \texttt{imagesc} or \texttt{pcolor, shading flat}.  
-      \item[(c)]  By repeating your explicit solutions for different choices of $\Delta t$, approximate the largest time step that will allow a stable solution.  Show an example of your solution for a unstable time step that is just past this stability limit, such that mild instability growth and/or artifacts can be seen.  
-      \item[(d)]  Change your finite difference method such that the second derivative parabolic term is computed using the solution at the $n+1$ time level, i.e. $f_{i}^{n+1},f_{i\pm1}^{n+1}$.  Keep the first spatial derivative term as explicit, viz. computed via upwind difference from $f_i^n$, as it was in part a.  This makes the algorithm semi-implicit and means that a system of equations must be solved at each time step.  Write down this system and submit it with your solution.  
-      \item[(e)]  Show that your semi-implicit method from part d produces stable results with much larger time steps than the method derived in part a.    
-      \item[(f)]  Show that your semi-implicit scheme will eventually become unstable if the time step is too large.  It will not look as bad as the fully explicit method in part a, but you can still show that the numerical solution increases in amplitude with time for large time steps - this is unphysical behavior.  Plot this instability growth and speculate as to its cause.  
-    \end{enumerate}
-    
-\end{enumerate}
-
-
-
-\end{document}
+      
+    \end{document}
